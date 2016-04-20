@@ -3,6 +3,7 @@ package uk.ac.ebi.mg.spreadsheet.readers;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -43,7 +44,10 @@ public class XLSpreadsheetReader implements SpreadsheetReader
   if( lineNo > maxRow )
    return null;
 
-  accum.clear();
+  if( accum == null )
+   accum = new ArrayList<String>();
+  else
+   accum.clear();
   
   Row row = sheet.getRow(lineNo++);
 
