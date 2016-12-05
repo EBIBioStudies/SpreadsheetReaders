@@ -2,9 +2,12 @@ package uk.ac.ebi.mg.spreadsheet.readers;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -17,6 +20,7 @@ import uk.ac.ebi.mg.spreadsheet.SpreadsheetReader;
 public class XLSpreadsheetReader implements SpreadsheetReader
 {
  private static DateFormat dateFormat;
+ private static DecimalFormat decFormat;
  
  private int lineNo=0;
  private int maxRow=0;
@@ -37,7 +41,29 @@ public class XLSpreadsheetReader implements SpreadsheetReader
  {
   return lineNo;
  }
+ 
+ private static DateFormat getDateFormat()
+ {
+  if( dateFormat == null )
+   dateFormat = new SimpleDateFormat(dateTimeFormat);
+  
+  return dateFormat;
+ }
 
+ private static DecimalFormat getDecFormat()
+ {
+  if( decFormat != null )
+   return decFormat;
+  
+  DecimalFormat df = new DecimalFormat();
+  df.setGroupingUsed(false);
+  df.setMaximumFractionDigits(300);
+  df.setDecimalSeparatorAlwaysShown(false);
+  df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.US));
+  
+  return decFormat = df;
+ }
+ 
  @Override
  public List<String> readRow(List<String> accum)
  {
@@ -58,7 +84,7 @@ public class XLSpreadsheetReader implements SpreadsheetReader
   
   for( int j=0; j <= lcn; j++ )
   {
-   Cell c = row.getCell(j, Row.RETURN_BLANK_AS_NULL);
+   Cell c = row.getCell(j, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
    
    if( c != null )
    {
@@ -68,14 +94,9 @@ public class XLSpreadsheetReader implements SpreadsheetReader
     else if( c.getCellType() == Cell.CELL_TYPE_NUMERIC )
     {
      if(DateUtil.isCellDateFormatted(c))
-     {
-      if( dateFormat == null )
-       dateFormat = new SimpleDateFormat(dateTimeFormat);
-      
-      accum.add(dateFormat.format(c.getDateCellValue()) );
-     }
+      accum.add(getDateFormat().format(c.getDateCellValue()) );
      else
-      accum.add( String.valueOf(c.getNumericCellValue()) );
+      accum.add( getDecFormat().format( c.getNumericCellValue() ) );
     }
     else if( c.getCellType() == Cell.CELL_TYPE_FORMULA )
     {
