@@ -11,8 +11,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source />
-					<target />
+				<configuration>
+					<fork>true</fork>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -61,7 +64,18 @@
 	</dependencies>
 
 	<repositories>
-
+		
+		<repository>
+            <id>Apache</id>
+            <url>http://repo.maven.apache.org/maven2</url>
+            <snapshots>
+             <enabled>false</enabled>
+            </snapshots>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
+         </repository>
+         
 		<repository>
 			<id>ebi-repo</id>
 			<name>EBI repo</name>
@@ -76,13 +90,13 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
-
+<!-- 
 		<repository>
 			<id>coconut.ebi.ac.uk</id>
 			<name>coconut.ebi.ac.uk-releases</name>
 			<url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
 		</repository>
-
+ -->
 
 	</repositories>
 </project>
