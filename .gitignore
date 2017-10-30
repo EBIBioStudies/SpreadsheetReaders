@@ -5,3 +5,5 @@
 .classpath
 /.idea/
 /SpreadsheetReaders.iml
+/build/
+/.gradle/
